@@ -1,0 +1,40 @@
+
+CREATE TABLE attrition(
+
+    Age integer,
+    Attrition integer,
+    BusinessTravel integer,
+    DailyRate integer,
+    DistanceFromHome integer,
+    Education integer,
+    EducationField integer,
+    EmployeeCount integer,
+    EmployeeNumber integer,
+    EnvironmentSatisfaction integer,
+    HourlyRate integer,
+    JobInvolvement integer,
+    JobLevel integer,
+    JobSatisfaction integer,
+    MaritalStatus integer,
+    MonthlyIncome integer,
+    MonthlyRate integer,
+    NumCompaniesWorked integer,
+    Over18 integer,
+    OverTime integer,
+    PercentSalaryHike integer,
+    PerformanceRating integer,
+    RelationshipSatisfaction integer,
+    StandardHours integer,
+    StockOptionLevel integer,
+    TotalWorkingYears integer,
+    TrainingTimesLastYear integer,
+    WorkLifeBalance integer,
+    YearsAtCompany integer,
+    YearsInCurrentRole integer,
+    YearsSinceLastPromotion integer,
+    YearsWithCurrManager integer,
+    IsMale integer,
+    CONSTRAINT production UNIQUE(EmployeeNumber)
+);
+INSERT INTO attrition(Age)
+VALUES (60)
