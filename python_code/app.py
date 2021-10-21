@@ -35,7 +35,7 @@ class uiApp(App):
     # method which will render our application
     def build(self):
         
-
+        
         
         self.fresh = True # this is used to track if someone has already been to the survey page
 
@@ -172,7 +172,7 @@ self.hr.add_widget(self.o_{name})
             popup.open()
             return
         t = f'X axis of plot set to "{name}".'
-        popup = Popup(title='Failed',
+        popup = Popup(title='Success',
         content=Label(text=str(t)),
         size_hint=(None, None), size=((self.window.size[1] * 0.1) + (7 * len(t)), 100))
         popup.open()
@@ -253,23 +253,37 @@ self.hr.add_widget(self.o_{name})
             popup.open()
             return
         plt.figure()
+        print("choosing plot", end='\r')
         if self.plot_type == 'scatter':
             sns.scatterplot(x = self.x, y=self.pred_df.proba, alpha= max(1/len(self.pred_df.proba),0.2))
             plt.axhline(.31, c='r')
         elif self.plot_type == 'hist':
-            sns.histplot(self.pred_df.proba)
+            for name in self.pred_df.columns:
+                if self.x.name == name:
+                    X = name
+            temp = self.pred_df.groupby(X).sum()
+            plt.hist(temp.pred)
         elif self.plot_type == 'kde':
             sns.kdeplot(x = self.x, y=self.pred_df.proba, fill=True)
             plt.axhline(.31, c='r')
         elif self.plot_type == 'bar':
-            plt.bar(self.x, self.pred_df.proba)
-            plt.axhline(.31, c='r')
-
-        plt.ylabel('Chance of Attrition')
+            for name in self.pred_df.columns:
+                if self.x.name == name:
+                    X = name
+            temp = self.pred_df.groupby(X).sum()
+            plt.bar(temp.index ,temp.proba)
+        
+            
+        print("readying plot.")
+        plt.title(f'Attrition Vs. {self.x.name}')
+        plt.ylabel('Attrition')
+        plt.xlabel(self.x.name)
+        print("readying plot..", end ='\r')
         popup = Popup(title='CoA Vs. Selected Attribute',
         content=FigureCanvasKivyAgg(plt.gcf()),
         size_hint=(.8, .8))
-        
+        print("readying plot...", end ='\r')
+        print("showing plot     ", end='\n')
         popup.open()
        
             
@@ -312,13 +326,28 @@ self.hr.add_widget(self.o_{name})
         plt.figure()
         if self.plot_type == 'scatter':
             sns.scatterplot(x = self.x, y=self.pred_df.proba, alpha= max(1/len(self.pred_df.proba),0.2))
+            plt.axhline(.31, c='r')
         elif self.plot_type == 'hist':
-            sns.histplot(x = self.x, y=self.pred_df.proba)
+            for name in self.pred_df.columns:
+                if self.x.name == name:
+                    X = name
+            temp = self.pred_df.groupby(X).sum()
+            plt.hist(temp.pred)
         elif self.plot_type == 'kde':
             sns.kdeplot(x = self.x, y=self.pred_df.proba, fill=True)
+            plt.axhline(.31, c='r')
         elif self.plot_type == 'bar':
-            sns.barplot(x = self.x, y=self.pred_df.proba, fill=True)
-        plt.axhline(.31, c='r')
+            for name in self.pred_df.columns:
+                if self.x.name == name:
+                    X = name
+            temp = self.pred_df.groupby(X).sum()
+            plt.bar(temp.index ,temp.proba)
+        
+            
+        print("readying plot.")
+        plt.title(f'Attrition Vs. {self.x.name}')
+        plt.ylabel('Attrition')
+        plt.xlabel(self.x.name)
 
         pop_layout = FloatLayout()
         i_path = TextInput(pos_hint={'right': .8, 'center_y': 0.5}, size_hint=(.7, .6), text='', font_name='nunito')
