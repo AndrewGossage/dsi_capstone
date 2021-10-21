@@ -396,7 +396,7 @@ self.hr.add_widget(self.o_{name})
   
 # registering our new custom fontstyle
 LabelBase.register(name='nunito', 
-                  fn_regular='NunitoRegular.ttf')
+                  fn_regular='../fonts/nunito/Nunito-Regular.ttf')
   
 # running the application
 uiApp().run()
