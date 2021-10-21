@@ -98,6 +98,7 @@ self.survey.add_widget(self.b_{name})
 
         #create dashboard page
         self.hr = FloatLayout()
+        self.plot_type = 'bar'
         self.b_back_to_land2 = Button(pos_hint={'right': .3, 'center_y': 0.9}, size_hint=(.25, .05), text='<- Back to Landing', font_name='nunito')
         self.b_back_to_land2.bind(on_press=self.load_land2)
         self.hr.add_widget(self.b_back_to_land2)
@@ -120,6 +121,10 @@ self.survey.add_widget(self.b_{name})
         self.b_set_bar = Button(pos_hint={'right': .55, 'center_y': 0.8}, size_hint=(.25, .05), text='Bar Plot', font_name='nunito')
         self.b_set_bar.bind(on_press=partial((lambda self, x: self.set_plot_type('bar')), self))
 
+        self.b_load_actuals = Button(pos_hint={'right': .8, 'center_y': 0.8}, size_hint=(.25, .05), text='Load Actuals', font_name='nunito')
+        self.b_load_actuals.bind(on_press=self.load_actuals)
+
+        self.hr.add_widget(self.b_load_actuals)
         self.hr.add_widget(self.b_set_bar)
         self.hr.add_widget(self.b_set_scatter)
         self.hr.add_widget(self.b_set_kde)
@@ -171,6 +176,7 @@ self.hr.add_widget(self.o_{name})
             size_hint=(None, None), size=((self.window.size[1] * 0.1) + (7 * len(t)), 100))
             popup.open()
             return
+        print(self.pred_df.columns)
         t = f'X axis of plot set to "{name}".'
         popup = Popup(title='Success',
         content=Label(text=str(t)),
@@ -215,7 +221,7 @@ self.hr.add_widget(self.o_{name})
     def run_model(self,instance):
         """This fetches the answers from our model"""
         self.pred_df = helper.predict()
-        self.default_x = range(len(self.pred_df.proba))
+        self.default_x = self.pred_df['Age']
         self.x = self.default_x
         
         self.default_y = self.pred_df.proba
@@ -224,14 +230,32 @@ self.hr.add_widget(self.o_{name})
         popup = Popup(title='Success',
         content=Label(text=str(t)),
         size_hint=(None, None), size=((self.window.size[1] * 0.1) + (7 * len(t)), 100))
-        self.plot_type = 'scatter'
         popup.open()
-        
+
+
+
+
+    def load_actuals(self,instance):
+        """This fetches the actuals"""
+        self.pred_df = helper.la()
+        self.x = self.pred_df['Age']
+        print(self.pred_df.columns)
+
+        self.default_y = self.pred_df.pred
+        self.default_y = self.pred_df.proba
+        self.y = self.default_y
+        t = 'Actuals Loaded.'
+        popup = Popup(title='Success',
+        content=Label(text=str(t)),
+        size_hint=(None, None), size=((self.window.size[1] * 0.1) + (7 * len(t)), 100))
+        popup.open()
+    
         
         
     def set_plot_type(self, name):
         try:
             self.plot_type = name
+            print(self.pred_df.columns)
         except:
             t = 'Please insure you have run the model.'
             popup = Popup(title='Failed',
@@ -254,9 +278,10 @@ self.hr.add_widget(self.o_{name})
             return
         plt.figure()
         print("choosing plot", end='\r')
+        print(self.pred_df.columns)
         if self.plot_type == 'scatter':
             sns.scatterplot(x = self.x, y=self.pred_df.proba, alpha= max(1/len(self.pred_df.proba),0.2))
-            plt.axhline(.31, c='r')
+            plt.axhline(.5, c='r')
         elif self.plot_type == 'hist':
             for name in self.pred_df.columns:
                 if self.x.name == name:
@@ -265,13 +290,13 @@ self.hr.add_widget(self.o_{name})
             plt.hist(temp.pred)
         elif self.plot_type == 'kde':
             sns.kdeplot(x = self.x, y=self.pred_df.proba, fill=True)
-            plt.axhline(.31, c='r')
+            plt.axhline(.5, c='r')
         elif self.plot_type == 'bar':
             for name in self.pred_df.columns:
                 if self.x.name == name:
                     X = name
             temp = self.pred_df.groupby(X).sum()
-            plt.bar(temp.index ,temp.proba)
+            plt.bar(temp.index ,temp['proba'])
         
             
         print("readying plot.")
@@ -326,7 +351,7 @@ self.hr.add_widget(self.o_{name})
         plt.figure()
         if self.plot_type == 'scatter':
             sns.scatterplot(x = self.x, y=self.pred_df.proba, alpha= max(1/len(self.pred_df.proba),0.2))
-            plt.axhline(.31, c='r')
+            plt.axhline(.5, c='r')
         elif self.plot_type == 'hist':
             for name in self.pred_df.columns:
                 if self.x.name == name:
@@ -335,7 +360,7 @@ self.hr.add_widget(self.o_{name})
             plt.hist(temp.pred)
         elif self.plot_type == 'kde':
             sns.kdeplot(x = self.x, y=self.pred_df.proba, fill=True)
-            plt.axhline(.31, c='r')
+            plt.axhline(.5, c='r')
         elif self.plot_type == 'bar':
             for name in self.pred_df.columns:
                 if self.x.name == name:
@@ -350,7 +375,7 @@ self.hr.add_widget(self.o_{name})
         plt.xlabel(self.x.name)
 
         pop_layout = FloatLayout()
-        i_path = TextInput(pos_hint={'right': .8, 'center_y': 0.5}, size_hint=(.7, .6), text='', font_name='nunito')
+        i_path = TextInput(pos_hint={'right': .8, 'center_y': 0.5}, size_hint=(.7, .6), text='../output/', font_name='nunito')
         b_path = Button(pos_hint={'right': .9, 'center_y': 0.5}, size_hint=(.09, .07), text='Save', font_name='nunito')
         
         b_path.bind(on_press=partial((lambda self, x: plt.savefig(i_path.text)), self))

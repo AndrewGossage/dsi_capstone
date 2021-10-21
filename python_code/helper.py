@@ -27,7 +27,6 @@ def predict_bst():
 def predict():
     with open('../pickles/voter.pkl', 'rb') as pickle_in:
         v = dill.load(pickle_in)
-    import cgoss
     df2 = pd.read_csv('../data/survey-results.csv')
     df2.dropna(inplace=True)
     df2.drop(columns='EmployeeNumber', inplace=True)
@@ -42,6 +41,14 @@ def predict():
     
     return df2
 
+def la():
+    df2 = pd.read_csv('../data/survey-results.csv')
+    df2.dropna(inplace=True)
+    df2.drop(columns='EmployeeNumber', inplace=True)
+    df2['pred'] =  df2.Attrition
+    df2['proba'] = df2.Attrition  
+    
+    return df2
 
 
 
