@@ -176,7 +176,7 @@ self.hr.add_widget(self.o_{name})
             size_hint=(None, None), size=((self.window.size[1] * 0.1) + (7 * len(t)), 100))
             popup.open()
             return
-        print(self.pred_df.columns)
+
         t = f'X axis of plot set to "{name}".'
         popup = Popup(title='Success',
         content=Label(text=str(t)),
@@ -239,7 +239,7 @@ self.hr.add_widget(self.o_{name})
         """This fetches the actuals"""
         self.pred_df = helper.la()
         self.x = self.pred_df['Age']
-        print(self.pred_df.columns)
+       
 
         self.default_y = self.pred_df.pred
         self.default_y = self.pred_df.proba
@@ -253,9 +253,10 @@ self.hr.add_widget(self.o_{name})
         
         
     def set_plot_type(self, name):
+        """set's the type of plot to be used"""
         try:
             self.plot_type = name
-            print(self.pred_df.columns)
+            
         except:
             t = 'Please insure you have run the model.'
             popup = Popup(title='Failed',
@@ -278,25 +279,32 @@ self.hr.add_widget(self.o_{name})
             return
         plt.figure()
         print("choosing plot", end='\r')
-        print(self.pred_df.columns)
-        if self.plot_type == 'scatter':
-            sns.scatterplot(x = self.x, y=self.pred_df.proba, alpha= max(1/len(self.pred_df.proba),0.2))
-            plt.axhline(.5, c='r')
-        elif self.plot_type == 'hist':
-            for name in self.pred_df.columns:
-                if self.x.name == name:
-                    X = name
-            temp = self.pred_df.groupby(X).sum()
-            plt.hist(temp.pred)
-        elif self.plot_type == 'kde':
-            sns.kdeplot(x = self.x, y=self.pred_df.proba, fill=True)
-            plt.axhline(.5, c='r')
-        elif self.plot_type == 'bar':
-            for name in self.pred_df.columns:
-                if self.x.name == name:
-                    X = name
-            temp = self.pred_df.groupby(X).sum()
-            plt.bar(temp.index ,temp['proba'])
+        try:
+            if self.plot_type == 'scatter':
+                sns.scatterplot(x = self.x, y=self.pred_df.proba, alpha= max(1/len(self.pred_df.proba),0.2))
+                plt.axhline(.5, c='r')
+            elif self.plot_type == 'hist':
+                for name in self.pred_df.columns:
+                    if self.x.name == name:
+                        X = name
+                temp = self.pred_df.groupby(X).sum()
+                plt.hist(temp.pred)
+            elif self.plot_type == 'kde':
+                sns.kdeplot(x = self.x, y=self.pred_df.proba, fill=True)
+                plt.axhline(.5, c='r')
+            elif self.plot_type == 'bar':
+                for name in self.pred_df.columns:
+                    if self.x.name == name:
+                        X = name
+                temp = self.pred_df.groupby(X).sum()
+                plt.bar(temp.index ,temp['proba'])
+        except:
+            t = 'Error in Generating plot. Ensure Variables are compatible with plot type.'
+            popup = Popup(title='Failed',
+            content=Label(text=str(t)),
+            size_hint=(None, None), size=((self.window.size[1] * 0.1) + (7 * len(t)), 100))
+            popup.open()
+            return
         
             
         print("readying plot.")
@@ -336,7 +344,7 @@ self.hr.add_widget(self.o_{name})
         self.window.add_widget(self.hr)
     
     def save_fig(self, instance):
-        """Generate popup with selected plot"""
+        """Saves selected plot"""
         try:
             test_model_run = self.x
         except:
@@ -349,24 +357,32 @@ self.hr.add_widget(self.o_{name})
 
         
         plt.figure()
-        if self.plot_type == 'scatter':
-            sns.scatterplot(x = self.x, y=self.pred_df.proba, alpha= max(1/len(self.pred_df.proba),0.2))
-            plt.axhline(.5, c='r')
-        elif self.plot_type == 'hist':
-            for name in self.pred_df.columns:
-                if self.x.name == name:
-                    X = name
-            temp = self.pred_df.groupby(X).sum()
-            plt.hist(temp.pred)
-        elif self.plot_type == 'kde':
-            sns.kdeplot(x = self.x, y=self.pred_df.proba, fill=True)
-            plt.axhline(.5, c='r')
-        elif self.plot_type == 'bar':
-            for name in self.pred_df.columns:
-                if self.x.name == name:
-                    X = name
-            temp = self.pred_df.groupby(X).sum()
-            plt.bar(temp.index ,temp.proba)
+        try:
+            if self.plot_type == 'scatter':
+                sns.scatterplot(x = self.x, y=self.pred_df.proba, alpha= max(1/len(self.pred_df.proba),0.2))
+                plt.axhline(.5, c='r')
+            elif self.plot_type == 'hist':
+                for name in self.pred_df.columns:
+                    if self.x.name == name:
+                        X = name
+                temp = self.pred_df.groupby(X).sum()
+                plt.hist(temp.pred)
+            elif self.plot_type == 'kde':
+                sns.kdeplot(x = self.x, y=self.pred_df.proba, fill=True)
+                plt.axhline(.5, c='r')
+            elif self.plot_type == 'bar':
+                for name in self.pred_df.columns:
+                    if self.x.name == name:
+                        X = name
+                temp = self.pred_df.groupby(X).sum()
+                plt.bar(temp.index ,temp['proba'])
+        except:
+            t = 'Error in Generating plot. Ensure Variables are compatible with plot type.'
+            popup = Popup(title='Failed',
+            content=Label(text=str(t)),
+            size_hint=(None, None), size=((self.window.size[1] * 0.1) + (7 * len(t)), 100))
+            popup.open()
+            return
         
             
         print("readying plot.")
@@ -376,7 +392,7 @@ self.hr.add_widget(self.o_{name})
 
         pop_layout = FloatLayout()
         i_path = TextInput(pos_hint={'right': .8, 'center_y': 0.5}, size_hint=(.7, .6), text='../output/', font_name='nunito')
-        b_path = Button(pos_hint={'right': .9, 'center_y': 0.5}, size_hint=(.09, .07), text='Save', font_name='nunito')
+        b_path = Button(pos_hint={'right': .9, 'center_y': 0.5}, size_hint=(.1, .6), text='Save', font_name='nunito')
         
         b_path.bind(on_press=partial((lambda self, x: plt.savefig(i_path.text)), self))
         pop_layout.add_widget(i_path)

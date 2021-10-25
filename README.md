@@ -165,16 +165,16 @@
 
 <p>Examinging Pearson Correlation with attrition and other variables did not turn up much.</p>
 <img src='output/heatmap.png'></img>
-<p>The patterns that were observed did make intuitive sense. An example would be that the longer you have been in the work field the less likely you are to quite untill a large spike at retirement age. Further patterns are also shown below:</p>
+<p>The patterns that were observed did make intuitive sense. An example would be that the longer you have been in the work field the less likely you are to quite until a large spike at retirement age. Further patterns are also shown below:</p>
 <img src='output/attr-vs-work.png'></img>
 <img src='../output/attrition-vs-age.png' ></img>
 <img src='../output/income.png' ></img>
 <img src='../output/income.png' ></img>
 <img src='../output/education.png' ></img>
-<p>The model was effectively able to capture these patterns. The application is a good place to go to compare patterns in the data to patterns in the model. For further inquery you are pointed there.</p>
+<p>The model was effectively able to capture these patterns in most cases. The application is a good place to go to compare patterns in the data to patterns in the model. For further inquiry you are pointed there.</p>
 
 <h2>Modeling</h2>
-<p>In creating a predictive model I encountered two main problems. First was of course the weak correlation between the target an our other variables. The second was hugely imbalanced classes. Without over sampling I was only able to achieve ~32% recall opn validation data. So I tested various rates of oversampling and the most effective ended up being adding between 400 and 600 oversampled samples to our training set. Here is some of the models I attempted and how they performed. Validation data was not oversampled and had a 235/51 split favoring non-attrition. Many of the models not shown had an issue where if I raised the recall over 70% the accuracy dropped to an unacceptable level. </p>
+<p>In creating a predictive model I encountered two main problems. First was of course the weak correlation between the target an our other variables. The second was hugely imbalanced classes. Without over sampling I was only able to achieve ~32% recall on validation data. So I tested various rates of oversampling and the most effective ended up being adding between 400 and 600 oversampled samples to our training set. Here is some of the models I attempted and how they performed. Validation data was not oversampled and had a 235/51 split favoring non-attrition. Many of the models not shown had an issue where if I raised the recall over 70% the accuracy dropped to an unacceptable level. </p>
 <img src='output/logreg.png'></img>
 <img src='output/nn.png'></img>
 <img src='output/xgb.png'></img>
@@ -182,8 +182,7 @@
 
 <p>In order to maximize recall without a huge dip in accuracy I used the customer logreg/XGBoost model. A Better compound model is likely possible, however, my tests showed a drastic reduction in speed.</p>
 <h2>Further Work Needed</h2>
-<li>There are a couple of X axis options in the app that do not work.</li>
 <li>The model may be able to be improved, however, doing so without a drastic reduction in speed may be difficult.</li>
 <li>Connect application to database instead of relying on csv files.</li>
 <li>The save button is glitchy for saving a plot.</li>
-<li>Add a way to retrain the model based on new information.</li>
+<li>Add a way to retrain the model based on new information within the app.</li>

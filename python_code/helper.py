@@ -28,7 +28,9 @@ def predict():
     with open('../pickles/voter.pkl', 'rb') as pickle_in:
         v = dill.load(pickle_in)
     df2 = pd.read_csv('../data/survey-results.csv')
+    df3 = pd.read_csv('../data/survey-results.csv')
     df2.dropna(inplace=True)
+    df3.dropna(inplace=True)
     df2.drop(columns='EmployeeNumber', inplace=True)
     df2 = pd.get_dummies(df2, columns = ['EducationField'] )
     with open('../pickles/sc.pkl', 'rb') as pickle_in:
@@ -36,10 +38,10 @@ def predict():
     X = sc.fit_transform(df2.drop(columns=['Attrition']))
     filt = 0.5
     pred = v.predict_proba_soft(X)
-    df2['pred'] =  [ 1 if i > filt else 0 for i in  pred]
-    df2['proba'] = pred   
+    df3['pred'] =  [ 1 if i > filt else 0 for i in  pred]
+    df3['proba'] = pred   
     
-    return df2
+    return df3
 
 def la():
     df2 = pd.read_csv('../data/survey-results.csv')
